@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data 
+SMSSpamCollection*
+
+# DS_store 
+.DS_Store

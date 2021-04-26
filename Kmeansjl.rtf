@@ -1,0 +1,91 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Italic;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red117\green113\blue92;
+\red246\green246\blue239;\red244\green0\blue95;\red152\green224\blue36;\red88\green209\blue235;\red157\green101\blue255;
+\red224\green213\blue97;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c100000\c100000\c100000;\cssrgb\c53333\c51765\c43529;
+\cssrgb\c97255\c97255\c94902;\cssrgb\c97647\c14902\c44706;\cssrgb\c65098\c88627\c18039;\cssrgb\c40000\c85098\c93725;\cssrgb\c68235\c50588\c100000;
+\cssrgb\c90196\c85882\c45490;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww13040\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 # code k-means function \strokec5 \
+\
+\strokec4 # x is a N by d array; N samples in a d-dimensional space\strokec5 \
+\strokec6 function\strokec5  \strokec7 kmeans\strokec5 (\
+        x\strokec6 ::
+\f1\i \strokec8 Union\{Array\{<:Real,1\},Array\{<:Real,2\}\}
+\f0\i0 \strokec5  , \
+        K\strokec6 ::
+\f1\i \strokec8 Int
+\f0\i0 \strokec5  ; \
+        maxIters \strokec6 =\strokec5  \strokec9 100\strokec5 , \
+        tol \strokec6 =\strokec5  \strokec9 1e-4\strokec5 ,\
+        means\strokec6 ::
+\f1\i \strokec8 Union\{Array\{<:Real,1\},Array\{<:Real,2\}\}
+\f0\i0 \strokec5  \strokec6 =\strokec5  Float64[],\
+    )\
+\
+    size_x \strokec6 =\strokec5  \strokec8 size\strokec5 (x)\
+    N \strokec6 =\strokec5  size_x[\strokec9 1\strokec5 ]\
+    \strokec6 if\strokec5  \strokec8 length\strokec5 (size_x) \strokec6 ==\strokec5  \strokec9 1\strokec5 \
+        d \strokec6 =\strokec5  \strokec9 1\strokec5 \
+    \strokec6 else\strokec5  \
+        d \strokec6 =\strokec5  size_x[\strokec9 2\strokec5 ]\
+    \strokec6 end\strokec5 \
+    \
+    \strokec6 if\strokec5  \strokec8 length\strokec5 (means) \strokec6 ==\strokec5  \strokec9 0\strokec5 \
+        means \strokec6 =\strokec5  \strokec8 Array
+\f1\i \{Float64,2\}
+\f0\i0 \strokec5 (undef,K, d) \strokec4 # random initialisation of the means\strokec5 \
+        \strokec6 for\strokec5  col \strokec6 in\strokec5  \strokec9 1\strokec6 :\strokec5 d\
+            m \strokec6 =\strokec5  \strokec8 minimum\strokec5 (x[:,col])\
+            M \strokec6 =\strokec5  \strokec8 maximum\strokec5 (x[:,col])\
+            means[:,col] \strokec6 =\strokec5  \strokec8 rand\strokec5 (K)\strokec6 *\strokec5 (M\strokec6 -\strokec5 m) \strokec6 .+\strokec5  m \
+        \strokec6 end\strokec5 \
+    \strokec6 end\strokec5 \
+\
+    flag \strokec6 =\strokec5  \strokec9 0\strokec5 \
+    idx \strokec6 =\strokec5  \strokec8 falses\strokec5 (N,K) \strokec4 # to store which mean each data point belongs to\strokec5 \
+    \strokec6 for\strokec5  i \strokec6 in\strokec5  \strokec9 1\strokec6 :\strokec5 maxIters \
+        \strokec4 # find the closest mean for each data point\strokec5 \
+        \strokec6 for\strokec5  n \strokec6 in\strokec5  \strokec9 1\strokec6 :\strokec5 N \
+            currClosestDistance \strokec6 =\strokec5  \strokec8 sum\strokec5 ((x[n,:] \strokec6 -\strokec5  means[\strokec9 1\strokec5 ,:])\strokec6 .^\strokec9 2\strokec5 )\
+            currClosestIdx \strokec6 =\strokec5  \strokec9 1\strokec5 \
+            \strokec6 for\strokec5  k \strokec6 in\strokec5  \strokec9 2\strokec6 :\strokec5 K\
+                temp \strokec6 =\strokec5  \strokec8 sum\strokec5 ((x[n,:] \strokec6 -\strokec5  means[k,:])\strokec6 .^\strokec9 2\strokec5 )\
+                \strokec6 if\strokec5  temp \strokec6 <\strokec5  currClosestDistance\
+                    currClosestDistance \strokec6 =\strokec5  temp \
+                    currClosestIdx \strokec6 =\strokec5  k\
+                \strokec6 end\strokec5 \
+            \strokec6 end\strokec5 \
+            \strokec4 # allocate data point n to mean k\strokec5 \
+            idx[n,currClosestIdx] \strokec6 =\strokec5  \strokec9 true\strokec5 \
+        \strokec6 end\strokec5  \
+        \strokec4 # update the means \strokec5 \
+        oldMeans \strokec6 =\strokec5  means\
+        \strokec6 for\strokec5  k \strokec6 in\strokec5  \strokec9 1\strokec6 :\strokec5 K \
+            idxk \strokec6 =\strokec5  idx[:,k]\
+            means[k,:] \strokec6 =\strokec5  \strokec8 sum\strokec5 (x[idxk,:], dims \strokec6 =\strokec5  \strokec9 1\strokec5 )\strokec6 /\strokec8 sum\strokec5 (idxk)\
+        \strokec6 end\strokec5 \
+        \strokec4 # terminate condition \strokec5 \
+        stepSize \strokec6 =\strokec5  \strokec8 sum\strokec5 (\strokec8 abs\strokec5 .(oldMeans\strokec6 -\strokec5 means))\
+        \strokec6 if\strokec5  stepSize \strokec6 <\strokec5  tol\
+            flag \strokec6 =\strokec5  \strokec9 1\strokec5 \
+            \strokec6 break\strokec5 \
+        \strokec6 end\strokec5 \
+    \strokec6 end\strokec5 \
+    \strokec6 if\strokec5  flag \strokec6 ==\strokec5  \strokec9 0\strokec5 \
+        msg \strokec6 =\strokec5  \strokec10 "exceeded max iters with step size "\strokec6 *\strokec8 string\strokec5 (stepSize)\
+    \strokec6 elseif\strokec5  flag \strokec6 ==\strokec5  \strokec9 1\strokec5  \
+        msg \strokec6 =\strokec5  \strokec10 "reached tol, "\strokec6 *\strokec8 string\strokec5 (tol)\
+    \strokec6 else\strokec5  \
+        msg \strokec6 =\strokec5  \strokec10 ""\strokec5 \
+    \strokec6 end\strokec5 \
+    \strokec6 return\strokec5  means, idx, msg\
+\strokec6 end\strokec5 \
+\
+\strokec8 kmeans\strokec5 (\strokec8 rand\strokec5 (\strokec9 100\strokec5 ,\strokec9 3\strokec5 ), \strokec9 4\strokec5 )\
+}

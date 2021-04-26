@@ -1,0 +1,46 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Italic;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red117\green113\blue92;
+\red246\green246\blue239;\red244\green0\blue95;\red152\green224\blue36;\red88\green209\blue235;\red157\green101\blue255;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c100000\c100000\c100000;\cssrgb\c53333\c51765\c43529;
+\cssrgb\c97255\c97255\c94902;\cssrgb\c97647\c14902\c44706;\cssrgb\c65098\c88627\c18039;\cssrgb\c40000\c85098\c93725;\cssrgb\c68235\c50588\c100000;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 # create a function to compute the running mean of a stream of scalars \strokec5 \
+\
+\strokec6 function\strokec5  \strokec7 runningMeans\strokec5 (x\strokec6 ::
+\f1\i \strokec8 Array\{<:Real,1\}
+\f0\i0 \strokec5 )\
+    currMean \strokec6 =\strokec5  x[\strokec9 1\strokec5 ]\
+    \strokec6 for\strokec5  n \strokec6 in\strokec5  \strokec9 2\strokec6 :\strokec8 length\strokec5 (x)\
+        currMean \strokec6 =\strokec5  (currMean\strokec6 *\strokec5 (n\strokec6 -\strokec9 1\strokec5 ) \strokec6 +\strokec5  x[n])\strokec6 /\strokec5 n\
+    \strokec6 end\strokec5 \
+    \strokec6 return\strokec5  currMean\
+\strokec6 end\strokec5 \
+\
+\strokec4 # create a function to compute the running variance of a stream of scalars\strokec5 \
+\
+\strokec6 function\strokec5  \strokec7 runningVar\strokec5 (x\strokec6 ::
+\f1\i \strokec8 Array\{<:Real,1\}
+\f0\i0 \strokec5 )\
+    cumSum \strokec6 =\strokec5  x[\strokec9 1\strokec5 ]\
+    cumSum2 \strokec6 =\strokec5  x[\strokec9 1\strokec5 ]\strokec6 ^\strokec9 2\strokec5 \
+    currVar \strokec6 =\strokec5  \strokec9 0\strokec5  \
+    \strokec6 for\strokec5  n \strokec6 in\strokec5  \strokec9 2\strokec6 :\strokec8 length\strokec5 (x)\
+        cumSum \strokec6 +=\strokec5  x[n]\
+        cumSum2 \strokec6 +=\strokec5  x[n]\strokec6 ^\strokec9 2\strokec5 \
+        currVar \strokec6 =\strokec5  (cumSum2 \strokec6 -\strokec5  cumSum\strokec6 ^\strokec9 2\strokec6 /\strokec5 n)\strokec6 /\strokec5 (n\strokec6 -\strokec9 1\strokec5 )\
+    \strokec6 end\strokec5 \
+    \strokec6 return\strokec5  currVar\
+\strokec6 end\strokec5 \
+\
+\strokec6 function\strokec5  \strokec7 var\strokec5 (x)\
+    mean \strokec6 =\strokec5  \strokec8 sum\strokec5 (x)\strokec6 /\strokec8 length\strokec5 (x)\
+    theVar \strokec6 =\strokec5  \strokec8 sum\strokec5 ((x \strokec6 .-\strokec5  mean)\strokec6 .^\strokec9 2\strokec5 )\strokec6 /\strokec5 (\strokec8 length\strokec5 (x)\strokec6 -\strokec9 1\strokec5 )\
+\strokec6 end\strokec5 \
+}
