@@ -1,0 +1,149 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww15040\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 # code a binary search algorithm to find a zero \
+\
+function binarySearchZero(f,a,b; tol = 0.0001, maxIters = 100)\
+	# f: a monotonic function \
+	# a: left hand end point of interval \
+	# b: right-hand end point of interval \
+	c = (a+b)/2\
+	\
+	fc = f(c)\
+	fa = f(a)\
+	sign_fc = sign(fc)\
+	sign_fa = sign(fa)\
+\
+	# exit flag\
+	flag = 0\
+	\
+	for n in 1:maxIters\
+		# check to see if zero is to the left or right of c\
+		if sign_fc*sign_fa > 0\
+			a = c \
+			# early exit if we have reached tol level \
+			if b-a < tol\
+				flag = n\
+				break\
+			end\
+			fa = fc \
+			c = (a+b)/2\
+			fc = f(c)\
+		else\
+			b = c\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 			# early exit if we have reached tol level \
+			if b-a < tol\
+				flag = n\
+				break\
+			end\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 			# fa = fa\
+			c = (a+b)/2\
+			fc = f(c)\
+		end \
+	end\
+\
+	# exit flag message \
+	if flag == 0 \
+		msg = \'93tol not reached: may not have found a zero\'94\
+	else\
+		msg = \'93tol reached in \'94*string(n)*\'94 iterations\'94\
+	end	\
+\
+	return [a,c,b], msg \
+end\
+\
+# code a binary search to find a minimum \
+# assume a scalar function, f: R -> R \
+\
+function binarySearchMin(f, a, b; tol = 0.0001, maxIters = 100)\
+	c = (a+b)/2\
+	vareps = sqrt(eps)\
+	\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 	fc_left = f(c-vareps)\
+	fc_right = f(c+vareps) \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 	slope = (fc_right - fc_left)/(2*vareps)\
+	direction  = sign(slope) \
+\
+	for n in 1:maxIters \
+		if direction > 0 \
+			a = c\
+			if b-a<tol\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 				break \
+			end\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 			c = (a+b)/2\
+			fc_left = f(c-vareps)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 			fc_right = f(c+vareps) \
+			slope = (fc_right - fc_left)/(2*vareps)\
+			direction  = sign(slope) \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 		else \
+			b = c \
+			if b-a<tol\
+				break \
+			end\
+			c = (a+b)/2\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 			fc_left = f(c-vareps)\
+			fc_right = f(c+vareps) \
+			slope = (fc_right - fc_left)/(2*vareps)\
+			direction  = sign(slope) \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 		end\
+	end \
+	return [a,b]\
+end\
+\
+# golden search \
+\
+function goldenSearchMax(f, a, b; tol = 0.0001, maxIters = 100)\
+	# f: a scalar function \
+	# a: the left-hand end point of the interval\
+	# b: the right-hand end point \
+	# tol: the final interval will be [c-tol,c+tol] wide\
+	# maxIters \
+	\
+	golden = (sqrt(5)-1)/2\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 	c_1 = a + (b-a)*golden\
+	c_2 = a + (b-a)*(1-golden)\
+	fc_1 = f(c_1)	\
+	fc_2 = f(c_2)	\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+	for n in 1:maxIters \
+		if fc_1 < fc_2 \
+			# min lies between a and fc_2\
+			b = c_2\
+			c_2 = c_1 \
+			fc_2 = fc_1\
+			c_1 = a+(b-a)*golden\
+			fc_1 = f(c_1)\
+		else # fc_1 >= fc_2 \
+			# min lies between c_1 and b \
+			a = c_1 \
+			c_1 = c_2 \
+			fc_1 = fc_2 \
+			c_2 = a + (b-a)*golden \
+			fc_2 = f(c_2) \
+		end\
+	end\
+	c = (a+b)/2\
+	return c, f(c), [a,b]\
+end\
+\
+\
+\
+\
+\
+}
